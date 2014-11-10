@@ -10,7 +10,6 @@
 
     <properties>
         <springVersion>4.0.0.RELEASE</springVersion>
-        <spockVersion>0.7-groovy-2.0</spockVersion>
         <gmavenVersion>1.5</gmavenVersion>
         <gmavenProviderSelection>2.0</gmavenProviderSelection>
         <groovyVersion>2.1.8</groovyVersion>
@@ -61,6 +60,13 @@
             <groupId>com.google.apis</groupId>
             <artifactId>google-api-services-mapsengine</artifactId>
             <version>v1-rev52-1.19.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
