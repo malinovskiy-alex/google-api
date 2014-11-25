@@ -9,8 +9,14 @@ import static groovyx.net.http.Method.GET
 class GoogleService {
     public static final String GOOGLE_API = "http://maps.googleapis.com"
 
-    double[][] generateDistanceMatrix(String... addresses) {
-
+    void goThroughString(String begin, String end) {
+        if (end.length() <= 1)
+            System.out.println(begin + end);
+        else
+            for (int i = 0; i < end.length(); i++) {
+                String newString = end.substring(0, i) + end.substring(i + 1);
+                goThroughString(begin + end.charAt(i), newString);
+            }
     }
 
     double generateDistance(String origin, String destination) {
