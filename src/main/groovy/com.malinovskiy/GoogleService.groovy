@@ -9,14 +9,30 @@ import static groovyx.net.http.Method.GET
 class GoogleService {
     public static final String GOOGLE_API = "http://maps.googleapis.com"
 
-    void goThroughString(String begin, String end) {
-        if (end.length() <= 1)
-            System.out.println(begin + end);
+    void goThroughString(int[] start, int[] end) {
+        if (end.length <= 1)
+            showArray(start, end)
         else
-            for (int i = 0; i < end.length(); i++) {
-                String newString = end.substring(0, i) + end.substring(i + 1);
-                goThroughString(begin + end.charAt(i), newString);
+            for (int i = 0; i < end.length; i++) {
+                int[] newArray = new int[end.length - 1];
+                int[] begin = new int[start.length + 1];
+                System.arraycopy(start, 0, begin, 0, start.length);
+                begin[begin.length - 1] = end[i]
+                System.arraycopy(end, 0, newArray, 0, i)
+                System.arraycopy(end, i + 1, newArray, i, newArray.length - i)
+                //String newString = end.substring(0, i) + end.substring(i + 1);
+                goThroughString(begin, newArray);
             }
+    }
+
+    void showArray(int[] start, int[] end) {
+        int[] result = new int[start.length + end.length]
+        System.arraycopy(start, 0, result, 0, start.length)
+        System.arraycopy(end, 0, result, start.length, end.length)
+        for (int i = 0; i < result.length; i++) {
+            System.out.print(result[i]+",")
+        }
+        System.out.println()
     }
 
     double generateDistance(String origin, String destination) {
