@@ -9,30 +9,39 @@ import static groovyx.net.http.Method.GET
 class GoogleService {
     public static final String GOOGLE_API = "http://maps.googleapis.com"
 
-    void goThroughString(int[] start, int[] end) {
-        if (end.length <= 1)
+    void goThroughString(Point[] start, Point[] end) {
+        if (end.length <= 1) {
             showArray(start, end)
-        else
+        } else
             for (int i = 0; i < end.length; i++) {
-                int[] newArray = new int[end.length - 1];
-                int[] begin = new int[start.length + 1];
+                Point[] newArray = new Point[end.length - 1];
+                Point[] begin = new Point[start.length + 1];
                 System.arraycopy(start, 0, begin, 0, start.length);
                 begin[begin.length - 1] = end[i]
                 System.arraycopy(end, 0, newArray, 0, i)
                 System.arraycopy(end, i + 1, newArray, i, newArray.length - i)
-                //String newString = end.substring(0, i) + end.substring(i + 1);
                 goThroughString(begin, newArray);
             }
     }
 
-    void showArray(int[] start, int[] end) {
-        int[] result = new int[start.length + end.length]
+    void showArray(Point[] start, Point[] end) {
+        Point[] result = new Point[start.length + end.length]
         System.arraycopy(start, 0, result, 0, start.length)
         System.arraycopy(end, 0, result, start.length, end.length)
-        for (int i = 0; i < result.length; i++) {
-            System.out.print(result[i]+",")
+        double resultDist = 0;
+        String address = ""
+        for (int i = 0; i < result.length - 1; i++) {
+            resultDist += generateDistance(result[i].address, result[i + 1].address)
+            address += result[i].address + "," + result[i].address + ","
         }
-        System.out.println()
+        System.out.println(address + "=" + resultDist)
+    }
+
+    double getDistByPoints(Point[] result) {
+        double resultDist = 0;
+        for (int i = 0; i < result.length - 1; i++) {
+            resultDist += generateDistance(result[i].address, result[i + 1].address)
+        }
     }
 
     double generateDistance(String origin, String destination) {

@@ -14,10 +14,13 @@ class GoogleServiceTest {
 
     @Test
     public void testGoThroughTheString() {
-        int[] arr = new int[5];
-        for (int i = 0; i < arr.length; i++) {
-            arr[i] = i + 1;
-        }
-        gs.goThroughString(new int[0], arr)
+        Point[] arr = [
+                new Point(address: "Московський просп., 122, Харків, Харківська область"),
+                new Point(address: "Московський просп., 197, Харків, Харківська область"),
+                new Point(address: "Куп'янська вул., 5, Харків, Харківська область"),
+                new Point(address: "Садово-Набережна вул., 6, Харків, Харківська область"),
+                new Point(address: "2А, пл. Повстання, 2А, Харків, Харківська область")
+        ];
+        gs.goThroughString(new Point[0], arr)
     }
 }
