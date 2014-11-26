@@ -14,13 +14,23 @@ class GoogleServiceTest {
 
     @Test
     public void testGoThroughTheString() {
-        Point[] arr = [
+        def arr = Arrays.asList(
                 new Point(address: "Московський просп., 122, Харків, Харківська область"),
                 new Point(address: "Московський просп., 197, Харків, Харківська область"),
                 new Point(address: "Куп'янська вул., 5, Харків, Харківська область"),
                 new Point(address: "Садово-Набережна вул., 6, Харків, Харківська область"),
                 new Point(address: "2А, пл. Повстання, 2А, Харків, Харківська область")
-        ];
-        gs.goThroughString(new Point[0], arr)
+                /*new Point(address: "a"),
+                new Point(address: "b"),
+                new Point(address: "c"),
+                new Point(address: "d"),
+                new Point(address: "e")*/
+        )
+        Minimum target = new Minimum()
+        long cur = System.nanoTime()
+        gs.goThroughString(target, new ArrayList<Point>(), arr)
+        long end = System.nanoTime()
+        println("Execution time ${(end - cur) / 1000000000}")
+        print(gs.getDistByPoints(target.points))
     }
 }

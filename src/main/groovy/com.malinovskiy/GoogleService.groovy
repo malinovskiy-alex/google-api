@@ -9,39 +9,39 @@ import static groovyx.net.http.Method.GET
 class GoogleService {
     public static final String GOOGLE_API = "http://maps.googleapis.com"
 
-    void goThroughString(Point[] start, Point[] end) {
-        if (end.length <= 1) {
-            showArray(start, end)
+    void goThroughString(Minimum result, List<Point> start, List<Point> end) {
+        if (end.size() <= 1) {
+            start.addAll(end)
+            if (!result.points) {
+                result.points.addAll(start)
+                result.distance = getDistByPoints(start)
+            } else {
+                double curDist = getDistByPoints(start)
+                if (result.distance > curDist) {
+                    result.points.clear()
+                    result.points.addAll(start)
+                    result.distance = curDist
+                }
+            }
+
         } else
-            for (int i = 0; i < end.length; i++) {
-                Point[] newArray = new Point[end.length - 1];
-                Point[] begin = new Point[start.length + 1];
-                System.arraycopy(start, 0, begin, 0, start.length);
-                begin[begin.length - 1] = end[i]
-                System.arraycopy(end, 0, newArray, 0, i)
-                System.arraycopy(end, i + 1, newArray, i, newArray.length - i)
-                goThroughString(begin, newArray);
+            for (int i = 0; i < end.size(); i++) {
+                List<Point> newArray = new ArrayList<>(end.size() - 1);
+                List<Point> begin = new ArrayList<>(end.size() + 1);
+                begin.addAll(start)
+                begin.add(end.get(i))
+                newArray.addAll(end)
+                newArray.remove(end.get(i))
+                goThroughString(result, begin, newArray);
             }
     }
 
-    void showArray(Point[] start, Point[] end) {
-        Point[] result = new Point[start.length + end.length]
-        System.arraycopy(start, 0, result, 0, start.length)
-        System.arraycopy(end, 0, result, start.length, end.length)
+    double getDistByPoints(List<Point> result) {
         double resultDist = 0;
-        String address = ""
-        for (int i = 0; i < result.length - 1; i++) {
-            resultDist += generateDistance(result[i].address, result[i + 1].address)
-            address += result[i].address + "," + result[i].address + ","
-        }
-        System.out.println(address + "=" + resultDist)
-    }
-
-    double getDistByPoints(Point[] result) {
-        double resultDist = 0;
-        for (int i = 0; i < result.length - 1; i++) {
+        for (int i = 0; i < result.size() - 1; i++) {
             resultDist += generateDistance(result[i].address, result[i + 1].address)
         }
+        return resultDist
     }
 
     double generateDistance(String origin, String destination) {
