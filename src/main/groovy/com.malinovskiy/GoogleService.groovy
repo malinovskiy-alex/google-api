@@ -2,11 +2,13 @@ import groovyx.net.http.HTTPBuilder
 
 import static groovyx.net.http.ContentType.JSON
 import static groovyx.net.http.Method.GET
+import static java.lang.Math.*
 
 /**
  * Created by Александр on 10.11.2014.
  */
 class GoogleService {
+    private static final double EARTH_RADIUS = 6371; // Радиус Земли
     public static final String GOOGLE_API = "http://maps.googleapis.com"
 
     void goThroughString(Minimum result, List<Point> start, List<Point> end) {
@@ -44,7 +46,7 @@ class GoogleService {
         return resultDist
     }
 
-    double generateDistance(String origin, String destination) {
+    def generateDistance(String origin, String destination) {
         def http = new HTTPBuilder(GOOGLE_API)
         double result = 0
         http.request(GET, JSON) {
@@ -55,7 +57,8 @@ class GoogleService {
             response.success = { resp, json ->
                 assert resp.statusLine.statusCode == 200
                 String dist = json.rows.elements['distance'].text[0][0]
-                result = Double.parseDouble(dist.replaceAll(" km", ""))
+                //result = Double.parseDouble(dist.replaceAll("( km)|( m)", ""))
+                return dist
             }
 
             // handler for any failure status code:
@@ -64,5 +67,17 @@ class GoogleService {
             }
             return result
         }
+    }
+
+
+    double getDistanceByLatAndLng(double originLat, double originLng, double destLat, double destLng) {
+        final double dlng = deg2rad(originLng - destLng);
+        final double dlat = deg2rad(originLat - destLat);
+        final double a = sin(dlat / 2) * sin(dlat / 2) + cos(deg2rad(destLat)) * cos(deg2rad(originLat)) * sin(dlng / 2) * sin(dlng / 2);
+        return BigDecimal.valueOf(2 * atan2(sqrt(a), sqrt(1 - a)) * EARTH_RADIUS).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue();
+    }
+
+    private static double deg2rad(final double degree) {
+        return degree * (Math.PI / 180);
     }
 }
