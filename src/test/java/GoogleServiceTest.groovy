@@ -45,10 +45,10 @@ class GoogleServiceTest {
         coordFile.text.eachLine { origin ->
             String[] coordinates = origin.split(",")
             coordFile.text.eachLine { dest ->
-                if (origin && dest) {
+                //if (origin && dest) {
                     String[] destin = dest.split(",")
-                    distFile << gs.getDistanceByLatAndLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]), Double.parseDouble(destin[0]), Double.parseDouble(destin[1])) * 1.3 + ","
-                }
+                    distFile << gs.getDistanceByLatAndLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]), Double.parseDouble(destin[0]), Double.parseDouble(destin[1])) * 2 + ","
+               // }
             }
             distFile<<"\n"
         }
