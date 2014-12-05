@@ -1,10 +1,13 @@
 import org.junit.Test
 
+import java.text.Bidi
+
 /**
  * Created by Александр on 10.11.2014.
  */
 
 class GoogleServiceTest {
+    public int speed = 30
     GoogleService gs = new GoogleService()
 
     @org.junit.Test
@@ -37,36 +40,31 @@ class GoogleServiceTest {
 
     @Test
     public void testReading() {
-        def addrsFile = new File("E:/adresses.csv")
-        def distFile = new File("E:/distances.txt")
-        int i = 0
-        addrsFile.text.eachLine { origin ->
-            if (origin) {
-                String[] coordinates = origin.substring(origin.length() - 20).split(",")
-                distFile << coordinates[0] + "," + coordinates[1] + "\n"
-            }
-            /*if (i > 20)
-                file.text.eachLine { dest ->
-                    if (origin && dest)
-                        print "${gs.generateDistance(origin.substring(0, origin.length() - 21), dest.substring(0, dest.length() - 21))};"
+        def coordFile = new File("coordinates.csv")
+        def distFile = new File("distances.csv")
+        coordFile.text.eachLine { origin ->
+            String[] coordinates = origin.split(",")
+            coordFile.text.eachLine { dest ->
+                if (origin && dest) {
+                    String[] destin = dest.split(",")
+                    distFile << gs.getDistanceByLatAndLng(Double.parseDouble(coordinates[0]), Double.parseDouble(coordinates[1]), Double.parseDouble(destin[0]), Double.parseDouble(destin[1])) * 1.3 + ","
                 }
-            i++
-            println(i)*/
+            }
+            distFile<<"\n"
         }
     }
 
     @Test
     public void countDist() {
-        def distFile = new File("E:/distances.txt")
-        int i = 0
-        distFile.text.eachLine { origin ->
-            distFile.text.eachLine { dest ->
-                String[] originCoordinates = origin.split(",")
-                String[] destCoordinates = dest.split(",")
-                if (origin && dest)
-                    print "${gs.getDistanceByLatAndLng(Double.valueOf(originCoordinates[0]), Double.valueOf(originCoordinates[1]), Double.valueOf(destCoordinates[0]), Double.valueOf(destCoordinates[1]))} km;"
+        def distances = new File("distances.csv")
+        def times = new File("times.csv")
+        distances.text.eachLine { origin ->
+            String[] originCoordinates = origin.split(",")
+            originCoordinates.each {
+                double dist = Double.parseDouble(it)
+                times << "${BigDecimal.valueOf(dist/speed*60).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue()},"
             }
-            println()
+            times << "\n"
         }
     }
 }
