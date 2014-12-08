@@ -69,11 +69,16 @@ class GoogleService {
         }
     }
 
-    public List<Address> readAddresses(File addresses) {
+    public List<Address> readAddresses(File addresses, File coordinates) {
         List<Address> result = new ArrayList<>()
-        addresses.getText('windows-1251').eachLine {
+        addresses.eachLine {
             String[] comps = it.split(",")
-            result.add(new Address(name: comps[0] + comps[1], lat: Double.valueOf(comps[2]), lng: Double.valueOf(comps[3])))
+            result.add(new Address(name: comps[0] + comps[1]))
+        }
+        coordinates.eachLine { line, number ->
+            String[] comps = line.split(",")
+            result.get(number-1).lat = Double.valueOf(comps[0])
+            result.get(number-1).lng = Double.valueOf(comps[1])
         }
         result
     }

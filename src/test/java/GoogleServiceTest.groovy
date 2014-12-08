@@ -7,6 +7,7 @@ import org.junit.Test
 class GoogleServiceTest {
     public int speed = 30
     GoogleService gs = new GoogleService()
+    ClusterService cs = new ClusterService()
 
     @org.junit.Test
     public void generateDistance() {
@@ -67,9 +68,8 @@ class GoogleServiceTest {
     }
 
     @Test
-    public void testReadAddresses() {
-        gs.readAddresses(new File("coordinates.csv")).each {
-            println(it)
-        }
+    public void testCreateClusters() {
+        List<Address> addrs = gs.readAddresses(new File("addresses.txt"), new File("coordinates.csv"))
+        cs.generateClusters(addrs, 4)
     }
 }
