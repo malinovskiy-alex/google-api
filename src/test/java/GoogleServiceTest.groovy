@@ -28,7 +28,7 @@ class GoogleServiceTest {
                 new Point(address: "d"),
                 new Point(address: "e")
         )
-        Route target = new Route()
+        Minimum target = new Minimum()
         long cur = System.nanoTime()
         gs.goThroughString("", "abcdefghijkoprstuvw")
         long end = System.nanoTime()
@@ -70,14 +70,12 @@ class GoogleServiceTest {
     @Test
     public void testCreateClusters() {
         List<Address> addrs = gs.readAddresses(new File("addresses.txt"), new File("coordinates.csv"))
-        Route result = new Route()
-        long start = System.nanoTime()
-        gs.goThroughString(result, new ArrayList<Address>(), addrs)
-        long end = System.nanoTime()
-        println("Execution time ${(end - start) / 1000000000}")
-        result.addresses.each {
-            println(it.name)
+        List<Cluster> cls = cs.generateClusters(addrs, 4)
+        cls.each {
+            println "Cluster "
+            it.addresses.each {
+                println it.name
+            }
         }
-        println(result.distance)
     }
 }
