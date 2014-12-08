@@ -69,12 +69,20 @@ class GoogleService {
         }
     }
 
+    public List<Address> readAddresses(File addresses) {
+        List<Address> result = new ArrayList<>()
+        addresses.getText('windows-1251').eachLine {
+            String[] comps = it.split(",")
+            result.add(new Address(name: comps[0] + comps[1], lat: Double.valueOf(comps[2]), lng: Double.valueOf(comps[3])))
+        }
+        result
+    }
 
     double getDistanceByLatAndLng(double originLat, double originLng, double destLat, double destLng) {
         final double dlng = deg2rad(originLng - destLng);
         final double dlat = deg2rad(originLat - destLat);
         final double a = sin(dlat / 2) * sin(dlat / 2) + cos(deg2rad(destLat)) * cos(deg2rad(originLat)) * sin(dlng / 2) * sin(dlng / 2);
-        return BigDecimal.valueOf(2 * atan2(sqrt(a), sqrt(1 - a)) * EARTH_RADIUS).setScale(2,BigDecimal.ROUND_HALF_DOWN).doubleValue();
+        return BigDecimal.valueOf(2 * atan2(sqrt(a), sqrt(1 - a)) * EARTH_RADIUS).setScale(2, BigDecimal.ROUND_HALF_DOWN).doubleValue();
     }
 
     private static double deg2rad(final double degree) {
