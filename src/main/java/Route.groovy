@@ -1,7 +1,7 @@
 /**
  * Created by Александр on 27.11.2014.
  */
-class Minimum {
+class Route {
     double distance
-    def points = []
+    List<Address> addresses = []
 }

@@ -11,37 +11,40 @@ class GoogleService {
     private static final double EARTH_RADIUS = 6371; // Радиус Земли
     public static final String GOOGLE_API = "http://maps.googleapis.com"
 
-    void goThroughString(Minimum result, List<Point> start, List<Point> end) {
+    void goThroughString(Route result, List<Address> start, List<Address> end) {
         if (end.size() <= 1) {
             start.addAll(end)
-            if (!result.points) {
-                result.points.addAll(start)
+            if (!result.addresses) {
+                result.addresses.addAll(start)
                 result.distance = getDistByPoints(start)
             } else {
                 double curDist = getDistByPoints(start)
                 if (result.distance > curDist) {
-                    result.points.clear()
-                    result.points.addAll(start)
+                    result.addresses.clear()
+                    result.addresses.addAll(start)
                     result.distance = curDist
                 }
             }
-
-        } else
+        } else {
             for (int i = 0; i < end.size(); i++) {
-                List<Point> newArray = new ArrayList<>(end.size() - 1);
-                List<Point> begin = new ArrayList<>(end.size() + 1);
+                List<Address> newArray = new ArrayList<>(end.size() - 1);
+                List<Address> begin = new ArrayList<>(end.size() + 1);
                 begin.addAll(start)
                 begin.add(end.get(i))
                 newArray.addAll(end)
-                newArray.remove(end.get(i))
-                goThroughString(result, begin, newArray);
+                if (result.distance == 0 || result.distance > getDistByPoints(begin)) {
+                    newArray.remove(end.get(i))
+                    goThroughString(result, begin, newArray);
+                }
             }
+        }
     }
 
-    double getDistByPoints(List<Point> result) {
+
+    double getDistByPoints(List<Address> result) {
         double resultDist = 0;
         for (int i = 0; i < result.size() - 1; i++) {
-            resultDist += generateDistance(result[i].address, result[i + 1].address)
+            resultDist += getDistanceByLatAndLng(result.get(i).lat, result.get(i).lng, result.get(i + 1).lat, result.get(i + 1).lng)
         }
         return resultDist
     }
@@ -71,14 +74,18 @@ class GoogleService {
 
     public List<Address> readAddresses(File addresses, File coordinates) {
         List<Address> result = new ArrayList<>()
-        addresses.eachLine {
-            String[] comps = it.split(",")
-            result.add(new Address(name: comps[0] + comps[1]))
+        addresses.eachLine { line, number ->
+            if (number < 15) {
+                String[] comps = line.split(",")
+                result.add(new Address(name: comps[0] + comps[1]))
+            }
         }
         coordinates.eachLine { line, number ->
-            String[] comps = line.split(",")
-            result.get(number-1).lat = Double.valueOf(comps[0])
-            result.get(number-1).lng = Double.valueOf(comps[1])
+            if (number < 10) {
+                String[] comps = line.split(",")
+                result.get(number - 1).lat = Double.valueOf(comps[0])
+                result.get(number - 1).lng = Double.valueOf(comps[1])
+            }
         }
         result
     }
@@ -93,4 +100,5 @@ class GoogleService {
     private static double deg2rad(final double degree) {
         return degree * (Math.PI / 180);
     }
+
 }
