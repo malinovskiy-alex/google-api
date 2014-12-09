@@ -28,7 +28,7 @@ class GoogleServiceTest {
                 new Point(address: "d"),
                 new Point(address: "e")
         )
-        Minimum target = new Minimum()
+        //Minimum target = new Minimum()
         long cur = System.nanoTime()
         gs.goThroughString("", "abcdefghijkoprstuvw")
         long end = System.nanoTime()

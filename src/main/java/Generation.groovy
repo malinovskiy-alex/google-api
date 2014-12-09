@@ -2,7 +2,7 @@
  * Created by malinovsky on 12/9/14.
  */
 public class GAHelloWorld {
-
+    //http://www.algorithmist.ru/2010/05/hello-world_8544.html
     public static final int POPULATION_SIZE = 1000;
     public static final double ELITE_RATE = 0.1;
     public static final double SURVIVE_RATE = 0.5;
