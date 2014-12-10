@@ -7,7 +7,7 @@ public class GAHelloWorld {
     public static final double ELITE_RATE = 0.1;
     public static final double SURVIVE_RATE = 0.5;
     public static final double MUTATION_RATE = 0.2;
-    public static final String TARGET = "Hello World!";
+    public static final String TARGET = "We will go home tomorrow morning.";
     private static final int MAX_ITER = 1000;
 
     void initializePopulation(List<Genome> population) {
